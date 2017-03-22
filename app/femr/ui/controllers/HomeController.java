@@ -8,6 +8,8 @@ import femr.ui.views.html.sessions.create;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import java.util.ArrayList;
+
 public class HomeController extends Controller {
 
     private ISessionService sessionService;
@@ -24,7 +26,7 @@ public class HomeController extends Controller {
             return ok(index.render(currentUser));
         }
 
-        return ok(create.render(null));
+        return ok(create.render(null, ""));
     }
 
 

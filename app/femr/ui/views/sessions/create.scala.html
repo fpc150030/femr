@@ -1,4 +1,10 @@
-@(createForm: Form[femr.ui.models.sessions.CreateViewModel])
+@(createForm: Form[femr.ui.models.sessions.CreateViewModel], message: String)
+
+@additionalMessages = {
+@if(!message.isEmpty()) {
+    <p style="color:blue">@message</p>
+}
+}
 
 @import femr.ui.views.html.layouts.main
 @import femr.ui.controllers.routes.SessionsController
@@ -8,12 +14,16 @@
 @main("Login", styles = styles) {
 
     @helper.form(action = SessionsController.createPost(), 'class -> "form-signin") {
+
         <div id="login">
+
             <h1>Please sign in</h1>
             <input type="text" name="email" placeholder="Email" />
             <input type="password" name="password" placeholder="Password" />
+            @additionalMessages
             <input type="submit" value="Log in" />
             <img src="@routes.Assets.versioned("img/logo_color_sm.png")" />
+
         </div>
     }
 }

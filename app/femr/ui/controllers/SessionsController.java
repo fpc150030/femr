@@ -17,8 +17,10 @@ import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.data.validation.ValidationError;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class SessionsController extends Controller {
@@ -44,7 +46,7 @@ public class SessionsController extends Controller {
             return redirect(routes.HomeController.index());
         }
 
-        return ok(create.render(createViewModelForm));
+        return ok(create.render(createViewModelForm, ""));
     }
 
     public Result createPost() {
@@ -52,9 +54,8 @@ public class SessionsController extends Controller {
         final Form<CreateViewModel> createViewModelForm = formFactory.form(CreateViewModel.class);
         CreateViewModel viewModel = createViewModelForm.bindFromRequest().get();
         ServiceResponse<CurrentUser> response = sessionsService.createSession(viewModel.getEmail(), viewModel.getPassword(), request().remoteAddress());
-
         if (response.hasErrors()) {
-            return ok(create.render(createViewModelForm));
+            return badRequest(create.render(createViewModelForm, "Email or password is incorrect."));
         }else{
             IUser user = userService.retrieveById(response.getResponseObject().getId());
             user.setLastLogin(dateUtils.getCurrentDateTime());
